@@ -20,14 +20,20 @@ function App() {
     if (minutes > 0 || seconds > 0 || ms > 0) {
       setSolveArray((prevSolveArray) => [
         ...prevSolveArray,
-        { id: Date.now(), time: `${minutes}:${seconds}.${ms}` },
+        {
+          id: prevSolveArray.length + 1,
+          minutes: minutes,
+          seconds: seconds,
+          ms: ms,
+          time: time,
+        },
       ]);
-      handleResetTimer()
+      handleResetTimer();
     }
   }
 
-  function handleResetTimer(){
-    setTime(0)
+  function handleResetTimer() {
+    setTime(0);
   }
 
   useEffect(() => {
@@ -81,6 +87,7 @@ function App() {
     <>
       <Timer minutes={minutes} seconds={seconds} ms={ms} />
       <Space onClick={handleSpaceClick} spaceDown={spaceDown} />
+      <Fastest fastestTime={solveArray.sort((a, b) => a.time - b.time)} />
       <History solveArray={solveArray} />
     </>
   );
@@ -101,7 +108,9 @@ function History({ solveArray }) {
     <div className="bg-orange-500/10 px-5 py-3 w-45">
       <p className="text-center">History</p>
       {solveArray.map((solve) => (
-        <div key={solve.id}>{solve.time}</div>
+        <div key={solve.id}>
+          Attempt {solve.id}: {solve.minutes} m {solve.seconds} s {solve.ms} ms
+        </div>
       ))}
     </div>
   );
@@ -112,6 +121,24 @@ function Space({ onClick, spaceDown }) {
     <button onClick={onClick} className={spaceDown ? "text-red-500" : ""}>
       SPACE
     </button>
+  );
+}
+
+function Fastest({ fastestTime }) {
+  return (
+    <div className="bg-green-500/10 px-5 py-3 w-45">
+      <p>
+        Fastest Time:{" "}
+        {fastestTime.length > 0 ? (
+          <span>
+            {fastestTime[0].minutes > 0 ? `${fastestTime[0].minutes} m` : ""}{" "}
+            {fastestTime[0].seconds} s {fastestTime[0].ms} ms
+          </span>
+        ) : (
+          ""
+        )}
+      </p>
+    </div>
   );
 }
 
