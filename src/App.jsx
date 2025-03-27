@@ -7,6 +7,8 @@ function App() {
   const [spaceDown, setSpaceDown] = useState(false);
   const [solveArray, setSolveArray] = useState([]);
 
+  const solveArraySorted = solveArray.slice()
+
   const minutes = Math.floor((time / 60000) % 60);
   const seconds = Math.floor((time / 1000) % 60);
   const ms = Math.floor((time / 10) % 100);
@@ -34,6 +36,10 @@ function App() {
 
   function handleResetTimer() {
     setTime(0);
+  }
+
+  function handleResetHistory() {
+    setSolveArray([]);
   }
 
   useEffect(() => {
@@ -87,8 +93,9 @@ function App() {
     <>
       <Timer minutes={minutes} seconds={seconds} ms={ms} />
       <Space onClick={handleSpaceClick} spaceDown={spaceDown} />
-      <Fastest fastestTime={solveArray.sort((a, b) => a.time - b.time)} />
-      <History solveArray={solveArray} />
+      <Fastest fastestTime={solveArraySorted.sort((a, b) => a.time - b.time)} />
+      <Average solveArray={solveArray} />
+      <History solveArray={solveArray} onResetHistory={handleResetHistory} />
     </>
   );
 }
@@ -103,13 +110,16 @@ function Timer({ minutes, seconds, ms }) {
   );
 }
 
-function History({ solveArray }) {
+function History({ solveArray, onResetHistory }) {
   return (
     <div className="bg-orange-500/10 px-5 py-3 w-45">
       <p className="text-center">History</p>
+      <button onClick={onResetHistory}>Delete History</button>
       {solveArray.map((solve) => (
         <div key={solve.id}>
-          Attempt {solve.id}: {solve.minutes} m {solve.seconds} s {solve.ms} ms
+          Attempt {solve.id}: {solve.minutes > 0 ? solve.minutes + " m" : ""}{" "}
+          {String(solve.seconds).padStart(2, "0")} s{" "}
+          {String(solve.ms).padStart(2, "0")} ms
         </div>
       ))}
     </div>
@@ -132,12 +142,31 @@ function Fastest({ fastestTime }) {
         {fastestTime.length > 0 ? (
           <span>
             {fastestTime[0].minutes > 0 ? `${fastestTime[0].minutes} m` : ""}{" "}
-            {fastestTime[0].seconds} s {fastestTime[0].ms} ms
+            {String(fastestTime[0].seconds).padStart(2, "0")} s{" "}
+            {String(fastestTime[0].ms).padStart(2, "0")} ms
           </span>
         ) : (
           ""
         )}
       </p>
+    </div>
+  );
+}
+
+function Average({ solveArray }) {
+  const times = solveArray.map((solve) => solve.time);
+  const getAverage = times.reduce((p, c) => p + c, 0) / times.length;
+
+  const minutes = Math.floor((getAverage / 60000) % 60);
+  const seconds = Math.floor((getAverage / 1000) % 60);
+  const ms = Math.floor((getAverage / 10) % 100);
+
+  const total = `${minutes > 0 ? minutes + " m " : ""} ${String(
+    seconds
+  ).padStart(2, "0")} s ${String(ms).padStart(2, "0")} ms`;
+  return (
+    <div className="bg-blue-500/10 px-5 py-3 w-45">
+      <p>Average Time: {isNaN(getAverage) ? "" : total}</p>
     </div>
   );
 }
