@@ -92,12 +92,14 @@ function App() {
   return (
     <>
       <Timer minutes={minutes} seconds={seconds} ms={ms} />
-      <div className="grid-cols-2 grid">
-        <Fastest
-          fastestTime={solveArraySorted.sort((a, b) => a.time - b.time)}
-        />
+      <div className="flex mt-10">
+        <div className="flex flex-col gap-3">
+          <Fastest
+            fastestTime={solveArraySorted.sort((a, b) => a.time - b.time)}
+          />
+          <Average solveArray={solveArray} />
+        </div>
         <History solveArray={solveArray} onResetHistory={handleResetHistory} />
-        <Average solveArray={solveArray} />
       </div>
       <Space onClick={handleSpaceClick} spaceDown={spaceDown} />
     </>
@@ -125,9 +127,10 @@ function Timer({ minutes, seconds, ms }) {
 
 function History({ solveArray, onResetHistory }) {
   return (
-    <div className="row-span-2 mt-20 w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-orange-500 to-orange-500/10">
+    <div className="row-span-2 h-fit w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-orange-500 to-orange-500/10">
       <div className="bg-slate-900/80 mx-auto p-8 rounded-[calc(1rem-3px)] w-110 flex flex-col items-center justify-center gap-5">
         <div>
+
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -139,9 +142,10 @@ function History({ solveArray, onResetHistory }) {
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776"
             />
           </svg>
+
 
           <p className="underline-offset-3 underline text-center text-3xl font-bold text-orange-500 drop-shadow-[0_5px_5px_rgba(255,105,0,.3)]">
             History
@@ -202,7 +206,7 @@ function Space({ onClick, spaceDown }) {
 
 function Fastest({ fastestTime }) {
   return (
-    <div className="row-span-2 h-fit mt-20 w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-green-500 to-green-500/10">
+    <div className="h-fit w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-green-500 to-green-500/10">
       <div className="bg-slate-900/80 mx-auto py-5 px-5 rounded-[calc(1rem-3px)] w-110 flex items-center justify-center">
         <div className="flex items-center gap-3 w-full">
           <svg
@@ -223,34 +227,18 @@ function Fastest({ fastestTime }) {
           <p className="grow text-left text-2xl font-extrabold text-green-500 drop-shadow-[0_5px_5px_rgba(0,201,80,.4)]">
             Fastest Time:
           </p>
-            {fastestTime.length > 0 ? (
-              <span className=" grow text-xl font-semibold drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]">
-                {fastestTime[0].minutes > 0
-                  ? `${fastestTime[0].minutes} m`
-                  : ""}{" "}
-                {String(fastestTime[0].seconds).padStart(2, "0")} s{" "}
-                {String(fastestTime[0].ms).padStart(2, "0")} ms
-              </span>
-            ) : (
-              ""
-            )}
+          {fastestTime.length > 0 ? (
+            <span className=" grow text-xl font-semibold drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]">
+              {fastestTime[0].minutes > 0 ? `${fastestTime[0].minutes} m` : ""}{" "}
+              {String(fastestTime[0].seconds).padStart(2, "0")} s{" "}
+              {String(fastestTime[0].ms).padStart(2, "0")} ms
+            </span>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>
-    // <div className="bg-green-500/10 px-5 py-3 w-45">
-    //   <p>
-    //     Fastest Time:{" "}
-    //     {fastestTime.length > 0 ? (
-    //       <span>
-    //         {fastestTime[0].minutes > 0 ? `${fastestTime[0].minutes} m` : ""}{" "}
-    //         {String(fastestTime[0].seconds).padStart(2, "0")} s{" "}
-    //         {String(fastestTime[0].ms).padStart(2, "0")} ms
-    //       </span>
-    //     ) : (
-    //       ""
-    //     )}
-    //   </p>
-    // </div>
   );
 }
 
@@ -266,10 +254,37 @@ function Average({ solveArray }) {
     seconds
   ).padStart(2, "0")} s ${String(ms).padStart(2, "0")} ms`;
   return (
-    <div className="bg-blue-500/10 px-5 py-3 w-45">
-      <p>Average Time: {isNaN(getAverage) ? "" : total}</p>
+    <div className=" h-fit w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-blue-500 to-blue-500/10">
+      <div className="bg-slate-900/80 mx-auto py-5 px-5 rounded-[calc(1rem-3px)] w-110 flex items-center justify-center">
+        <div className="flex items-center gap-3 w-full">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-10 flex-initial text-blue-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(43,127,255,.3)]"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            />
+          </svg>
+
+          <p className="grow text-left text-2xl font-extrabold text-blue-500 drop-shadow-[0_5px_5px_rgba(43,127,255,.4)]">
+            Average Time: 
+            
+          </p>
+          <span className=" grow text-white text-xl font-semibold drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]">{isNaN(getAverage) ? "" : total}</span>
+        </div>
+      </div>
     </div>
+    // <div className="bg-blue-500/10 px-5 py-3 w-45">
+    //   <p>Average Time: {isNaN(getAverage) ? "" : total}</p>
+    // </div>
   );
 }
 
 export default App;
+ 
