@@ -98,30 +98,42 @@ function App() {
   }, []);
 
   return (
-    <div className="px-5">
-      <Logo />
-      <Timer
-        minutes={minutes}
-        seconds={seconds}
-        ms={ms}
-        spaceDown={spaceDown}
-      />
-      <div className="flex w-fit mt-10 mx-auto gap-6 xl:flex-row flex-col flex-wrap transition-all">
-        <LineChart solveArray={solveArray} newSolve={newSolve} />
-        <div className="flex flex-col gap-3">
-          <Fastest
-            fastestTime={solveArraySorted.sort((a, b) => a.time - b.time)}
-          />
-          <Average solveArray={solveArray} />
-        </div>
-        <History
-          solveArray={solveArray}
-          onResetHistory={handleResetHistory}
-          newSolve={newSolve}
+    <>
+      <head>
+        <title>SOLVEX</title>
+        <link rel="icon" type="image/x-icon" href="/logo.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+          rel="stylesheet"
         />
+      </head>
+      <div className="px-5">
+        <Logo />
+        <Timer
+          minutes={minutes}
+          seconds={seconds}
+          ms={ms}
+          spaceDown={spaceDown}
+        />
+        <div className="flex w-fit mt-10 mx-auto gap-6 xl:flex-row flex-col flex-wrap transition-all">
+          <LineChart solveArray={solveArray} newSolve={newSolve} />
+          <div className="flex flex-col gap-3">
+            <Fastest
+              fastestTime={solveArraySorted.sort((a, b) => a.time - b.time)}
+            />
+            <Average solveArray={solveArray} />
+          </div>
+          <History
+            solveArray={solveArray}
+            onResetHistory={handleResetHistory}
+            newSolve={newSolve}
+          />
+        </div>
+        <Space onClick={handleSpaceClick} spaceDown={spaceDown} />
       </div>
-      <Space onClick={handleSpaceClick} spaceDown={spaceDown} />
-    </div>
+    </>
   );
 }
 
@@ -137,7 +149,7 @@ function Logo() {
         <path d="M10.362 1.093a.75.75 0 0 0-.724 0L2.523 5.018 10 9.143l7.477-4.125-7.115-3.925ZM18 6.443l-7.25 4v8.25l6.862-3.786A.75.75 0 0 0 18 14.25V6.443ZM9.25 18.693v-8.25l-7.25-4v7.807a.75.75 0 0 0 .388.657l6.862 3.786Z" />
       </svg>
 
-      <p className=" mx-auto mt-3 drop-shadow-[0_5px_5px_rgba(0,166,244,.4)] poppins text-7xl font-black text-transparent bg-clip-text bg-gradient-to-t from-blue-500 to-green-500 w-fit ">
+      <p className=" mx-auto mt-3 drop-shadow-[0_5px_5px_rgba(0,166,244,.4)] poppins text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-t from-blue-500 to-green-500 w-fit ">
         <span>S</span>
         <span>O</span>
         <span>L</span>
@@ -297,7 +309,7 @@ function Fastest({ fastestTime }) {
             />
           </svg>
 
-          <p className="poppins grow text-left text-xl font-extrabold text-green-500 drop-shadow-[0_5px_5px_rgba(0,201,80,.4)]">
+          <p className="poppins grow text-left text-xl font-bold text-green-500 drop-shadow-[0_5px_5px_rgba(0,201,80,.4)]">
             Fastest Time:
           </p>
           {fastestTime.length > 0 ? (
@@ -345,7 +357,7 @@ function Average({ solveArray }) {
             />
           </svg>
 
-          <p className="poppins grow text-left text-xl font-extrabold text-blue-500 drop-shadow-[0_5px_5px_rgba(43,127,255,.4)]">
+          <p className="poppins grow text-left text-xl font-bold text-blue-500 drop-shadow-[0_5px_5px_rgba(43,127,255,.4)]">
             Average Time:
           </p>
           <span className=" grow text-white text-xl font-semibold drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]">
