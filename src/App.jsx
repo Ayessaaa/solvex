@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import Chart from "chart.js/auto";
+import { Line } from "react-chartjs-2";
 
 function App() {
   const [time, setTime] = useState(0);
   const [start, setStart] = useState(false);
   const [spaceDown, setSpaceDown] = useState(false);
   const [solveArray, setSolveArray] = useState([]);
+  const [newSolve, setNewSolve] = useState(false);
 
   const solveArraySorted = solveArray.slice();
 
@@ -31,6 +34,11 @@ function App() {
         },
       ]);
       handleResetTimer();
+      setNewSolve(true);
+
+      setTimeout(() => {
+        setNewSolve(false);
+      }, 80);
     }
   }
 
@@ -73,7 +81,7 @@ function App() {
     return () => {
       window.removeEventListener("keyup", handleKeyPress);
     };
-  }, [start, time]); // Added dependencies to use latest state
+  }, [start, time]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -90,27 +98,74 @@ function App() {
   }, []);
 
   return (
-    <>
-      <Timer minutes={minutes} seconds={seconds} ms={ms} />
+    <div className="px-5">
+      <Logo />
+      <Timer
+        minutes={minutes}
+        seconds={seconds}
+        ms={ms}
+        spaceDown={spaceDown}
+      />
       <div className="flex mt-10">
+        <LineChart solveArray={solveArray} newSolve={newSolve} />
         <div className="flex flex-col gap-3">
           <Fastest
             fastestTime={solveArraySorted.sort((a, b) => a.time - b.time)}
           />
           <Average solveArray={solveArray} />
         </div>
-        <History solveArray={solveArray} onResetHistory={handleResetHistory} />
+        <History
+          solveArray={solveArray}
+          onResetHistory={handleResetHistory}
+          newSolve={newSolve}
+        />
       </div>
       <Space onClick={handleSpaceClick} spaceDown={spaceDown} />
-    </>
+    </div>
   );
 }
 
-function Timer({ minutes, seconds, ms }) {
+function Logo() {
+  return (
+    <div className="w-fit mx-auto mt-20">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="size-16 mx-auto"
+      >
+        <path d="M10.362 1.093a.75.75 0 0 0-.724 0L2.523 5.018 10 9.143l7.477-4.125-7.115-3.925ZM18 6.443l-7.25 4v8.25l6.862-3.786A.75.75 0 0 0 18 14.25V6.443ZM9.25 18.693v-8.25l-7.25-4v7.807a.75.75 0 0 0 .388.657l6.862 3.786Z" />
+      </svg>
+
+      <p className="mt-3 drop-shadow-[0_5px_5px_rgba(0,166,244,.4)] poppins text-8xl font-black text-transparent bg-clip-text bg-gradient-to-t from-blue-500 to-green-500 w-fit ">
+        <span>S</span>
+        <span>O</span>
+        <span>L</span>
+        <span>V</span>
+        <span>E</span>
+        <span>X</span>
+      </p>
+    </div>
+  );
+}
+
+function Timer({ minutes, seconds, ms, spaceDown }) {
   return (
     <div className="mt-20 w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-white to-white/10">
-      <div className="bg-slate-900/80 mx-auto p-8 rounded-[calc(1rem-3px)] w-110 flex items-center justify-center gap-5">
-        <div className="font-semibold  text-7xl text-white drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]">
+      <div
+        className={` mx-auto p-8 rounded-[calc(1rem-3px)] w-110 flex items-center justify-center gap-5 transition-all ${
+          spaceDown
+            ? "bg-white/50 text-slate-950"
+            : "bg-slate-900/80 text-white"
+        }`}
+      >
+        <div
+          className={`font-semibold  text-7xl   ${
+            spaceDown
+              ? "drop-shadow-[0_5px_5px_rgba(0,0,0,.3)]"
+              : "drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]"
+          }`}
+        >
           {minutes > 0 ? (
             <span className="digits">{String(minutes).padStart(2, "0")}:</span>
           ) : (
@@ -125,19 +180,22 @@ function Timer({ minutes, seconds, ms }) {
   );
 }
 
-function History({ solveArray, onResetHistory }) {
+function History({ solveArray, onResetHistory, newSolve }) {
   return (
-    <div className="row-span-2 h-fit w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-orange-500 to-orange-500/10">
+    <div
+      className={`row-span-2 h-fit w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-orange-500 to-orange-500/10 transition-all ${
+        newSolve ? "scale-103" : "scale-100"
+      }`}
+    >
       <div className="bg-slate-900/80 mx-auto p-8 rounded-[calc(1rem-3px)] w-110 flex flex-col items-center justify-center gap-5">
         <div>
-
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-12 text-orange-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(255,105,0,.4)]"
+            className="mb-2 size-12 text-orange-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(255,105,0,.4)]"
           >
             <path
               stroke-linecap="round"
@@ -146,8 +204,7 @@ function History({ solveArray, onResetHistory }) {
             />
           </svg>
 
-
-          <p className="underline-offset-3 underline text-center text-3xl font-bold text-orange-500 drop-shadow-[0_5px_5px_rgba(255,105,0,.3)]">
+          <p className="poppins underline-offset-3 underline text-center text-3xl font-bold text-orange-500 drop-shadow-[0_5px_5px_rgba(255,105,0,.3)]">
             History
           </p>
         </div>
@@ -177,7 +234,7 @@ function History({ solveArray, onResetHistory }) {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                class="size-5 text-orange-500/50 group-hover:text-white/70 transition-all drop-shadow-[0_5px_5px_rgba(255,105,0,.3)]"
+                className="size-5 text-orange-500/50 group-hover:text-white/70 transition-all drop-shadow-[0_5px_5px_rgba(255,105,0,.3)]"
               >
                 <path
                   fill-rule="evenodd"
@@ -198,9 +255,24 @@ function History({ solveArray, onResetHistory }) {
 
 function Space({ onClick, spaceDown }) {
   return (
-    <button onClick={onClick} className={spaceDown ? "text-red-500" : ""}>
-      SPACE
-    </button>
+    <div
+      className={`row-span-2 h-fit w-fit rounded-2xl mx-auto p-[3px]  transition-all mt-10  ${
+        spaceDown
+          ? "bg-gradient-to-b from-yellow-500 to-yellow-500/10  scale-105"
+          : " bg-gradient-to-b from-yellow-500 to-yellow-500/10"
+      } `}
+    >
+      <button
+        onClick={onClick}
+        className={`poppins tracking-wider font-bold text-5xl focus:ring-0  mx-auto p-5 rounded-[calc(1rem-3px)] w-110 flex flex-col items-center justify-center gap-5  ${
+          spaceDown
+            ? "text-white bg-yellow-500/60 shadow-xl shadow-yellow-500/20 "
+            : "text-yellow-500 bg-slate-900/80"
+        }`}
+      >
+        SPACE
+      </button>
+    </div>
   );
 }
 
@@ -215,7 +287,7 @@ function Fastest({ fastestTime }) {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-10 flex-initial text-green-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(0,201,80,.3)]"
+            className="size-10 flex-initial text-green-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(0,201,80,.3)]"
           >
             <path
               stroke-linecap="round"
@@ -224,7 +296,7 @@ function Fastest({ fastestTime }) {
             />
           </svg>
 
-          <p className="grow text-left text-2xl font-extrabold text-green-500 drop-shadow-[0_5px_5px_rgba(0,201,80,.4)]">
+          <p className="poppins grow text-left text-2xl font-extrabold text-green-500 drop-shadow-[0_5px_5px_rgba(0,201,80,.4)]">
             Fastest Time:
           </p>
           {fastestTime.length > 0 ? (
@@ -263,7 +335,7 @@ function Average({ solveArray }) {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-10 flex-initial text-blue-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(43,127,255,.3)]"
+            className="size-10 flex-initial text-blue-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(43,127,255,.3)]"
           >
             <path
               stroke-linecap="round"
@@ -272,19 +344,94 @@ function Average({ solveArray }) {
             />
           </svg>
 
-          <p className="grow text-left text-2xl font-extrabold text-blue-500 drop-shadow-[0_5px_5px_rgba(43,127,255,.4)]">
-            Average Time: 
-            
+          <p className="poppins grow text-left text-2xl font-extrabold text-blue-500 drop-shadow-[0_5px_5px_rgba(43,127,255,.4)]">
+            Average Time:
           </p>
-          <span className=" grow text-white text-xl font-semibold drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]">{isNaN(getAverage) ? "" : total}</span>
+          <span className=" grow text-white text-xl font-semibold drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]">
+            {isNaN(getAverage) ? "" : total}
+          </span>
         </div>
       </div>
     </div>
-    // <div className="bg-blue-500/10 px-5 py-3 w-45">
-    //   <p>Average Time: {isNaN(getAverage) ? "" : total}</p>
-    // </div>
+  );
+}
+
+function LineChart({ solveArray, newSolve }) {
+  const data = {
+    labels: solveArray.map((item) => "# " + item.id),
+    datasets: [
+      {
+        label: "Solve Time (Seconds)",
+        data: solveArray.map((item) => item.time / 1000),
+        backgroundColor: "rgba(251,44,54,.8)",
+        borderColor: "rgba(251,44,54,.4)",
+        borderWidth: 3,
+        tension: 0.4,
+        color: "rgb(255,255,255)",
+      },
+    ],
+  };
+
+  console.log(solveArray.map((item) => item.id));
+
+  return (
+    <div
+      className={`chart-container h-fit w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-red-500 to-red-500/10 transition-all ${
+        newSolve ? "scale-103" : "scale-100"
+      }`}
+    >
+      <div className="bg-slate-900/80 mx-auto py-8 px-10 rounded-[calc(1rem-3px)] w-110 items-center justify-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-12 text-red-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(251,44,54,.4)] "
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605"
+          />
+        </svg>
+
+        <p className="poppins underline-offset-3 underline text-center text-3xl font-bold text-red-500 drop-shadow-[0_5px_5px_rgba(251,44,54,.4)] mb-3">
+          Solving Time Chart
+        </p>
+        <Line
+          data={data}
+          options={{
+            scales: {
+              x: {
+                grid: {
+                  color: "rgba(251,44,54, 0.1)",
+                  borderColor: "white",
+                },
+                ticks: {
+                  color: "rgba(255, 89, 96, .8)",
+                },
+              },
+              y: {
+                grid: {
+                  color: "rgba(251,44,54, 0.1)",
+                  borderColor: "white",
+                },
+                ticks: {
+                  color: "rgba(255, 89, 96, .8)",
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          }}
+        />
+      </div>
+    </div>
   );
 }
 
 export default App;
- 
