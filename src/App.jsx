@@ -106,7 +106,7 @@ function App() {
         ms={ms}
         spaceDown={spaceDown}
       />
-      <div className="flex mt-10">
+      <div className="flex w-fit mt-10 mx-auto gap-6 xl:flex-row flex-col flex-wrap transition-all">
         <LineChart solveArray={solveArray} newSolve={newSolve} />
         <div className="flex flex-col gap-3">
           <Fastest
@@ -132,12 +132,12 @@ function Logo() {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
-        class="size-16 mx-auto"
+        class="size-14 mx-auto drop-shadow-[0_5px_5px_rgba(rgba(251,44,54,.4)]"
       >
         <path d="M10.362 1.093a.75.75 0 0 0-.724 0L2.523 5.018 10 9.143l7.477-4.125-7.115-3.925ZM18 6.443l-7.25 4v8.25l6.862-3.786A.75.75 0 0 0 18 14.25V6.443ZM9.25 18.693v-8.25l-7.25-4v7.807a.75.75 0 0 0 .388.657l6.862 3.786Z" />
       </svg>
 
-      <p className="mt-3 drop-shadow-[0_5px_5px_rgba(0,166,244,.4)] poppins text-8xl font-black text-transparent bg-clip-text bg-gradient-to-t from-blue-500 to-green-500 w-fit ">
+      <p className=" mx-auto mt-3 drop-shadow-[0_5px_5px_rgba(0,166,244,.4)] poppins text-7xl font-black text-transparent bg-clip-text bg-gradient-to-t from-blue-500 to-green-500 w-fit ">
         <span>S</span>
         <span>O</span>
         <span>L</span>
@@ -145,13 +145,14 @@ function Logo() {
         <span>E</span>
         <span>X</span>
       </p>
+      <p className="font-bold text-lg">Built for Solvers, by a Solver.</p>
     </div>
   );
 }
 
 function Timer({ minutes, seconds, ms, spaceDown }) {
   return (
-    <div className="mt-20 w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-white to-white/10">
+    <div className="mt-15 w-fit rounded-2xl mx-auto p-[3px] bg-gradient-to-b from-white to-white/10">
       <div
         className={` mx-auto p-8 rounded-[calc(1rem-3px)] w-110 flex items-center justify-center gap-5 transition-all ${
           spaceDown
@@ -160,7 +161,7 @@ function Timer({ minutes, seconds, ms, spaceDown }) {
         }`}
       >
         <div
-          className={`font-semibold  text-7xl   ${
+          className={`font-semibold  text-6xl   ${
             spaceDown
               ? "drop-shadow-[0_5px_5px_rgba(0,0,0,.3)]"
               : "drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]"
@@ -195,7 +196,7 @@ function History({ solveArray, onResetHistory, newSolve }) {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            className="mb-2 size-12 text-orange-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(255,105,0,.4)]"
+            className="mb-2 size-10 text-orange-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(255,105,0,.4)]"
           >
             <path
               stroke-linecap="round"
@@ -204,7 +205,7 @@ function History({ solveArray, onResetHistory, newSolve }) {
             />
           </svg>
 
-          <p className="poppins underline-offset-3 underline text-center text-3xl font-bold text-orange-500 drop-shadow-[0_5px_5px_rgba(255,105,0,.3)]">
+          <p className="tracking-wide poppins underline-offset-3 underline text-center text-2xl font-bold text-orange-500 drop-shadow-[0_5px_5px_rgba(255,105,0,.3)]">
             History
           </p>
         </div>
@@ -242,7 +243,7 @@ function History({ solveArray, onResetHistory, newSolve }) {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span className="">Delete</span>
+              <span className="poppins text-base">Delete</span>
             </button>
           </div>
         ) : (
@@ -264,7 +265,7 @@ function Space({ onClick, spaceDown }) {
     >
       <button
         onClick={onClick}
-        className={`poppins tracking-wider font-bold text-5xl focus:ring-0  mx-auto p-5 rounded-[calc(1rem-3px)] w-110 flex flex-col items-center justify-center gap-5  ${
+        className={`poppins tracking-wider font-bold text-4xl focus:ring-0  mx-auto p-5 rounded-[calc(1rem-3px)] w-110 flex flex-col items-center justify-center gap-5  ${
           spaceDown
             ? "text-white bg-yellow-500/60 shadow-xl shadow-yellow-500/20 "
             : "text-yellow-500 bg-slate-900/80"
@@ -287,7 +288,7 @@ function Fastest({ fastestTime }) {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            className="size-10 flex-initial text-green-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(0,201,80,.3)]"
+            className="size-7 flex-initial text-green-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(0,201,80,.3)]"
           >
             <path
               stroke-linecap="round"
@@ -296,7 +297,7 @@ function Fastest({ fastestTime }) {
             />
           </svg>
 
-          <p className="poppins grow text-left text-2xl font-extrabold text-green-500 drop-shadow-[0_5px_5px_rgba(0,201,80,.4)]">
+          <p className="poppins grow text-left text-xl font-extrabold text-green-500 drop-shadow-[0_5px_5px_rgba(0,201,80,.4)]">
             Fastest Time:
           </p>
           {fastestTime.length > 0 ? (
@@ -335,7 +336,7 @@ function Average({ solveArray }) {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            className="size-10 flex-initial text-blue-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(43,127,255,.3)]"
+            className="size-7 flex-initial text-blue-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(43,127,255,.3)]"
           >
             <path
               stroke-linecap="round"
@@ -344,7 +345,7 @@ function Average({ solveArray }) {
             />
           </svg>
 
-          <p className="poppins grow text-left text-2xl font-extrabold text-blue-500 drop-shadow-[0_5px_5px_rgba(43,127,255,.4)]">
+          <p className="poppins grow text-left text-xl font-extrabold text-blue-500 drop-shadow-[0_5px_5px_rgba(43,127,255,.4)]">
             Average Time:
           </p>
           <span className=" grow text-white text-xl font-semibold drop-shadow-[0_5px_5px_rgba(255,255,255,.3)]">
@@ -387,7 +388,7 @@ function LineChart({ solveArray, newSolve }) {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="size-12 text-red-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(251,44,54,.4)] "
+          class="size-10 text-red-500/50 stroke-2 mx-auto drop-shadow-[0_5px_5px_rgba(251,44,54,.4)] "
         >
           <path
             stroke-linecap="round"
@@ -396,7 +397,7 @@ function LineChart({ solveArray, newSolve }) {
           />
         </svg>
 
-        <p className="poppins underline-offset-3 underline text-center text-3xl font-bold text-red-500 drop-shadow-[0_5px_5px_rgba(251,44,54,.4)] mb-3">
+        <p className="tracking-wide poppins underline-offset-3 underline text-center text-2xl font-bold text-red-500 drop-shadow-[0_5px_5px_rgba(251,44,54,.4)] mb-3">
           Solving Time Chart
         </p>
         <Line
